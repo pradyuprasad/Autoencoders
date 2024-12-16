@@ -9,6 +9,8 @@ dependencies = [
     "matplotlib>=3.10.0",
     "numpy>=2.2.0",
     "pandas>=2.2.3",
+    "pytorch-ignite>=0.5.1",
     "torch>=2.5.1",
+    "torchmetrics>=1.6.0",
     "torchvision>=0.20.1",
 ]

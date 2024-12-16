@@ -1,11 +1,12 @@
 import torch.nn as nn
-
+import einops
 
 class Autoencoder(nn.Module):
     def __init__(self, final_dim=3):
         '''
         28x28 input -> dimension of final_sim -> 28x28 input
         '''
+        super().__init__()
         self.encoder = nn.Sequential(
                 nn.Linear(28*28, 128),
                 nn.ELU(),
@@ -23,6 +24,7 @@ class Autoencoder(nn.Module):
                 )
 
     def forward(self, x):
+        x = einops.rearrange(x, "b c h w -> b (c h w)")
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
-        return decoded
+        return einops.rearrange(decoded, "b (c h w) -> b c h w", c=1, h=28, w=28)

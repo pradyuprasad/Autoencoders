@@ -11,3 +11,4 @@ wheels/
 **/*.swp
 data/
 **/__pycache__/
+**/*.pth

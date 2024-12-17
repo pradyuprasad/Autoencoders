@@ -19,8 +19,11 @@ This project implements a basic autoencoder architecture that:
 
 ## Results
 
-- Average SSIM: 0.7192
-- Average MSE: 0.0309
+| Model Version    | Parameters | SSIM   | MSE    | Notes                  |
+|-----------------|------------|--------|---------|------------------------|
+| Original        | 209,411    | 0.7192 | 0.0309 | First implementation  |
+| Medium (+6%)    | 221,827    | 0.7329 | 0.0309 | Added 64-node layer   |
+| Large (10x)     | 2,218,243  | 0.7544 | 0.0277 | 10x larger model      |
 
 The 3D latent space visualization reveals how the model organizes different digits, though as a standard autoencoder, it doesn't enforce clear separation between digit classes.
 

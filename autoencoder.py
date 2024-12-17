@@ -8,18 +8,22 @@ class Autoencoder(nn.Module):
         '''
         super().__init__()
         self.encoder = nn.Sequential(
-                nn.Linear(28*28, 128),
+                nn.Linear(28*28, 1280),
                 nn.ELU(),
-                nn.Linear(128, 32),
+                nn.Linear(1280, 640),
                 nn.ELU(),
-                nn.Linear(32, final_dim)
+                nn.Linear(640, 320),
+                nn.ELU(),
+                nn.Linear(320, final_dim)
                 )
         self.decoder = nn.Sequential(
-                nn.Linear(final_dim, 32),
+                nn.Linear(final_dim, 320),
                 nn.ELU(),
-                nn.Linear(32, 128),
+                nn.Linear(320, 640),
                 nn.ELU(),
-                nn.Linear(128, 28*28),
+                nn.Linear(640, 1280),
+                nn.ELU(),
+                nn.Linear(1280, 28*28),
                 nn.Sigmoid()
                 )
 

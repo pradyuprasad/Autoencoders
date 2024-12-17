@@ -14,7 +14,6 @@ labels_for_plot = []
 
 with torch.no_grad():
     for images, labels in test_dataloader:
-        # Get encoded representations (similar to your forward method)
         x = einops.rearrange(images, "b c h w -> b (c h w)")
         encoded = model.encoder(x)
         

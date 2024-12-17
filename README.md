@@ -30,4 +30,4 @@ This project implements a basic autoencoder architecture that:
 2. Run `uv sync` to set your dev environment
 3. Run `uv run train_autoencoder.py` to train the model
 4. Run `uv run eval_model.py` to evaluate the results
-5. Run `uv run visualise_3d.py` to visualise the results
+5. Run `uv run interpolation.py` to understand how well the model interpolates between a 5 and a 9

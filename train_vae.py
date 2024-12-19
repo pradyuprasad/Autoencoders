@@ -29,7 +29,7 @@ def load_data():
 
 def calculate_total_loss(actual, reconstructed, mu, logvar, beta=0.00001, current_epoch=0, warmup_epochs=10, alpha=1.0):
     recon_loss = nn.functional.mse_loss(actual, reconstructed)
-    kl_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
+    kl_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2).clamp(max=88) - logvar.exp().clamp(min=1e-8, max=1e8))
     beta_t = beta * min(1.0, current_epoch / warmup_epochs)
     return alpha * recon_loss + beta_t * kl_loss
 
@@ -44,7 +44,7 @@ def get_validation_loss(model: VariationalAutoencoder, test_dataloader: torch.ut
     return sum_loss / len(test_dataloader)
 
 def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_dataloader: torch.utils.data.DataLoader, num_epochs: int = 100, patience: int = 10, min_delta: float = 0.0001, beta: float = 0.0001) -> VariationalAutoencoder:
-    model = VariationalAutoencoder(final_dim=16)
+    model = VariationalAutoencoder()
     loss_fn = nn.MSELoss()
     optimizer = torch.optim.AdamW(model.parameters())
     best_loss = float('inf')
@@ -71,6 +71,7 @@ def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_datalo
             kl_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
             loss = calculate_total_loss(image, reconstructed, mu, logvar, beta, current_epoch=i)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             train_recon_loss += recon_loss.item()
             train_kl_loss += kl_loss.item()

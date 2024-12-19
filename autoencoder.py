@@ -4,26 +4,29 @@ import einops
 class Autoencoder(nn.Module):
     def __init__(self, final_dim=3):
         '''
-        28x28 input -> dimension of final_sim -> 28x28 input
+        28x28 input -> dimension of final_dim -> 28x28 input
+        Using same architecture as VAE:
+        - Encoder: 784 -> 512 -> 256 -> 128 -> final_dim
+        - Decoder: final_dim -> 128 -> 256 -> 512 -> 784
         '''
         super().__init__()
         self.encoder = nn.Sequential(
-                nn.Linear(28*28, 128),
+                nn.Linear(28*28, 512),
                 nn.ELU(),
-                nn.Linear(128, 64),
+                nn.Linear(512, 256),
                 nn.ELU(),
-                nn.Linear(64, 32),
+                nn.Linear(256, 128),
                 nn.ELU(),
-                nn.Linear(32, final_dim)
+                nn.Linear(128, final_dim)
                 )
         self.decoder = nn.Sequential(
-                nn.Linear(final_dim, 32),
+                nn.Linear(final_dim, 128),
                 nn.ELU(),
-                nn.Linear(32, 64),
+                nn.Linear(128, 256),
                 nn.ELU(),
-                nn.Linear(64, 128),
+                nn.Linear(256, 512),
                 nn.ELU(),
-                nn.Linear(128, 28*28),
+                nn.Linear(512, 28*28),
                 nn.Sigmoid()
                 )
 

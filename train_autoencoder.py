@@ -33,11 +33,11 @@ def get_validation_loss(model: Autoencoder, test_dataloader: torch.utils.data.Da
             output = model(image)
             loss = loss_fn(image, output)
             total_loss += loss.item()
-    model.train()  
+    model.train()
     return total_loss / len(test_dataloader)
 
 
-def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_dataloader: torch.utils.data.DataLoader, 
+def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_dataloader: torch.utils.data.DataLoader,
                       num_epochs: int = 100, patience: int = 5, min_delta: float = 0.0001) -> Autoencoder:
     model = Autoencoder()
     loss_fn = nn.MSELoss()
@@ -52,6 +52,7 @@ def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_datalo
             reconstructed = model(image)
             loss = loss_fn(image, reconstructed)
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
 
         val_loss = get_validation_loss(model, test_dataloader)
@@ -68,7 +69,20 @@ def train_autoencoder(train_dataloader: torch.utils.data.DataLoader, test_datalo
             break
 
     return model
+
+def set_seed(seed: int):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    import numpy as np
+    np.random.seed(seed)
+    import random
+    random.seed(seed)
+
+
 if __name__ == "__main__":
+    set_seed(42)
     train_dataloader, test_dataloader = load_data()
     model = train_autoencoder(train_dataloader, test_dataloader)
     torch.save(model.state_dict(), "autoencoder.pth")

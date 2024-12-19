@@ -1,11 +1,11 @@
-from autoencoder import Autoencoder 
+from variational_autoencoder import VariationalAutoencoder
 import torch
 from train_autoencoder import load_data
 import einops
 from display_image import plot_interpolation
 
-model = Autoencoder()
-model.load_state_dict(torch.load("autoencoder.pth", weights_only=True))
+model = VariationalAutoencoder(final_dim=16)
+model.load_state_dict(torch.load("variational_autoencoder.pth", weights_only=True))
 train_dataloader, test_dataloader = load_data()
 model.eval()
 

@@ -17,10 +17,10 @@ def load_data():
                 for x in [True, False]]
     return [DataLoader(ds, batch_size=64, shuffle=True) for ds in datasets]
 
-def train_model(model_type='ae', epochs=100, patience=10, min_delta=0.0001, beta=0.001):
+def train_model(model_type='ae', epochs=100, patience=10, min_delta=0.0001, beta=0.001, final_dim=3):
     train_dl, test_dl = load_data()
     is_vae = model_type == 'vae'
-    model = (VariationalAutoencoder() if is_vae else Autoencoder()).to(device)
+    model = (VariationalAutoencoder(final_dim=final_dim) if is_vae else Autoencoder(final_dim=final_dim)).to(device)
     optimizer = torch.optim.AdamW(model.parameters())
     best_loss = float('inf')
     patience_count = 0
@@ -93,5 +93,5 @@ if __name__ == "__main__":
 
     torch.manual_seed(42)
     model_type = sys.argv[1]
-    model = train_model(model_type=model_type, beta=0.001 if model_type == 'vae' else None)
+    model = train_model(model_type=model_type, beta=0.001 if model_type == 'vae' else None, final_dim=32)
     torch.save(model.state_dict(), f"{'variational_' if model_type == 'vae' else ''}autoencoder.pth")

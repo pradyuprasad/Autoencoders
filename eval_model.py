@@ -11,10 +11,10 @@ if len(sys.argv) != 2 or sys.argv[1] not in ['vae', 'ae']:
 
 model_type = sys.argv[1]
 if model_type == 'vae':
-   model = VariationalAutoencoder()
+   model = VariationalAutoencoder(final_dim=32)
    path = "variational_autoencoder.pth"
 else:
-   model = Autoencoder()
+   model = Autoencoder(final_dim=32)
    path = "autoencoder.pth"
 
 model.load_state_dict(torch.load(path, weights_only=True))

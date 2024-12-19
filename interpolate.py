@@ -30,11 +30,11 @@ def plot_and_save_interpolation(images, filename):
 def interpolate_digits(model_type, digit_a, digit_b, steps=10):
     # Load appropriate model
     if model_type == 'vae':
-        model = VariationalAutoencoder()
+        model = VariationalAutoencoder(final_dim=32)
         path = "variational_autoencoder.pth"
         is_vae = True
     else:
-        model = Autoencoder()
+        model = Autoencoder(final_dim=32)
         path = "autoencoder.pth"
         is_vae = False
 

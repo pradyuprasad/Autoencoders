@@ -30,7 +30,7 @@ class VariationalAutoencoder(nn.Module):
 
     def forward(self, x, return_latent=True):
         x = einops.rearrange(x, "b c h w -> b (c h w)")
-        encoded = self.encoder(x)  # Shape: [batch_size, final_dim * 2]
+        encoded = self.encoder(x)
 
         mu, logvar = torch.chunk(encoded, 2, dim=1)
 
